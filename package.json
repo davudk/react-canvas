@@ -1,0 +1,43 @@
+{
+    "name": "@davudk/react-canvas",
+    "version": "1.0.0",
+    "description": "Helps you use the canvas element with React.",
+    "main": "lib/cjs/index.js",
+    "module": "lib/esm/index.js",
+    "types": "lib/esm/index.d.ts",
+    "scripts": {
+        "build": "npm-run-all --parallel build:esm build:cjs",
+        "build:esm": "tsc",
+        "build:cjs": "tsc --module commonjs --outdir lib/cjs",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/davudk/react-canvas.git"
+    },
+    "keywords": [
+        "react",
+        "utilities",
+        "canvas",
+        "render"
+    ],
+    "author": "davudk",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/davudk/react-canvas/issues"
+    },
+    "homepage": "https://github.com/davudk/react-canvas#readme",
+    "peerDependencies": {
+        "react": ">=16.8.0",
+        "react-dom": ">=16.8.0"
+    },
+    "devDependencies": {
+        "@types/react": ">=16.8.0",
+        "@types/react-dom": ">=16.8.0",
+        "npm-run-all": "4.1.5",
+        "typescript": "4.5.2"
+    },
+    "files": [
+        "/lib"
+    ]
+}
