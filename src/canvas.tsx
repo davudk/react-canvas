@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { CSSProperties, useEffect, useRef } from 'react';
 import { CanvasRenderer, CanvasRendererOptions, Size } from './renderer';
 
 export interface CanvasProps {
@@ -95,7 +95,18 @@ export function Canvas(props: CanvasProps) {
         }
     }
 
+    const coverViewportStyles: CSSProperties = {
+        position: 'fixed',
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        pointerEvents: 'none'
+    };
+
     return (
-        <canvas ref={canvasRef} className={props.className} />
+        <canvas ref={canvasRef} className={props.className} style={props.coverViewport ? coverViewportStyles : undefined} />
     )
 }
