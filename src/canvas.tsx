@@ -41,6 +41,8 @@ export function Canvas(props: CanvasProps) {
                 window.removeEventListener('resize', adjustCanvasSize);
             }
         }
+
+        return () => { };
     }, [props.coverViewport]);
 
     function adjustCanvasSize() {
