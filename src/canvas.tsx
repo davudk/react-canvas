@@ -42,7 +42,7 @@ export function Canvas(props: CanvasProps) {
             }
         }
 
-        return () => { };
+        return () => { }
     }, [props.coverViewport]);
 
     function adjustCanvasSize() {
@@ -59,10 +59,8 @@ export function Canvas(props: CanvasProps) {
         };
 
         if (!stateRef.current.prevRenderSize || prevSize.width !== newSize.width || prevSize.height !== newSize.height) {
-            canvas.style.width = newSize.width + 'px';
-            canvas.style.height = newSize.height + 'px';
-            canvas.width = newSize.width * (window.devicePixelRatio ?? 1);
-            canvas.height = newSize.height * (window.devicePixelRatio ?? 1);
+            canvas.width = newSize.width;
+            canvas.height = newSize.height;
 
             stateRef.current.prevRenderSize = newSize;
 
