@@ -34,15 +34,18 @@ export function ViewportCanvas(props: ViewportCanvasProps) {
         pointerEvents: 'none'
     };
 
-    const scale = (autoScaleRatio && window.devicePixelRatio) || 1;
+    const { innerWidth, innerHeight, devicePixelRatio } = window || {};
+    const width = innerWidth ?? 300;
+    const height = innerHeight ?? 150;
+    const scale = (autoScaleRatio && devicePixelRatio) || 1;
 
     return (
         <Canvas className={className}
             renderer={renderer}
-            width={window.innerWidth}
-            height={window.innerHeight}
-            renderWidth={window.innerWidth * scale}
-            renderHeight={window.innerHeight * scale}
+            width={width}
+            height={height}
+            renderWidth={width}
+            renderHeight={height * scale}
             style={style}
         />
     );
