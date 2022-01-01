@@ -14,7 +14,7 @@ export function Canvas(props: CanvasProps) {
 
     interface State {
         isMounted: boolean;
-        prevCanvasSize?: Size;
+        prevRenderSize?: Size;
         prevTimestamp?: DOMHighResTimeStamp;
     }
 
@@ -24,32 +24,30 @@ export function Canvas(props: CanvasProps) {
     });
 
     useEffect(() => {
-        const { coverViewport } = props;
-        if (coverViewport) {
-            window.addEventListener('resize', adjustCanvasSize);
-        }
-
         stateRef.current.isMounted = true;
+
+        adjustCanvasSize();
+        requestAnimationFrame(onAnimationFrame);
 
         return () => {
             stateRef.current.isMounted = false;
-
-            if (coverViewport) {
-                window.removeEventListener('resize', adjustCanvasSize);
-            }
         }
     }, []);
 
     useEffect(() => {
-        adjustCanvasSize();
-        requestAnimationFrame(onAnimationFrame);
-    }, []);
+        if (props.coverViewport) {
+            window.addEventListener('resize', adjustCanvasSize);
+            return () => {
+                window.removeEventListener('resize', adjustCanvasSize);
+            }
+        }
+    }, [props.coverViewport]);
 
     function adjustCanvasSize() {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
-        const prevSize = stateRef.current.prevCanvasSize ?? {
+        const prevSize = stateRef.current.prevRenderSize ?? {
             width: canvas.width,
             height: canvas.height
         };
@@ -58,11 +56,13 @@ export function Canvas(props: CanvasProps) {
             height: props.coverViewport ? window.innerHeight : props.height ?? 300,
         };
 
-        if (!stateRef.current.prevCanvasSize || prevSize.width !== newSize.width || prevSize.height !== newSize.height) {
-            canvas.width = newSize.width;
-            canvas.height = newSize.height;
+        if (!stateRef.current.prevRenderSize || prevSize.width !== newSize.width || prevSize.height !== newSize.height) {
+            canvas.style.width = newSize.width + 'px';
+            canvas.style.height = newSize.height + 'px';
+            canvas.width = newSize.width * (window.devicePixelRatio ?? 1);
+            canvas.height = newSize.height * (window.devicePixelRatio ?? 1);
 
-            stateRef.current.prevCanvasSize = newSize;
+            stateRef.current.prevRenderSize = newSize;
 
             props.renderer?.onResized?.(newSize, prevSize);
         }
@@ -107,6 +107,8 @@ export function Canvas(props: CanvasProps) {
     };
 
     return (
-        <canvas ref={canvasRef} className={props.className} style={props.coverViewport ? coverViewportStyles : undefined} />
+        <canvas ref={canvasRef}
+            className={props.className}
+            style={props.coverViewport ? coverViewportStyles : undefined} />
     )
 }
