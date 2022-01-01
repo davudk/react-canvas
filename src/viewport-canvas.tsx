@@ -34,7 +34,7 @@ export function ViewportCanvas(props: ViewportCanvasProps) {
         pointerEvents: 'none'
     };
 
-    const { innerWidth, innerHeight, devicePixelRatio } = window || {};
+    const { innerWidth, innerHeight, devicePixelRatio } = globalThis.window || {};
     const width = innerWidth ?? 300;
     const height = innerHeight ?? 150;
     const scale = (autoScaleRatio && devicePixelRatio) || 1;
