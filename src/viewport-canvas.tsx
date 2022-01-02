@@ -10,7 +10,7 @@ export interface ViewportCanvasProps {
 }
 
 export function ViewportCanvas(props: ViewportCanvasProps) {
-    const [_, rerender] = useState<void>();
+    const [_, rerender] = useState<any>();
     const { className, renderer, autoScaleRatio } = props;
 
     const stateRef = useRef<{
@@ -21,20 +21,22 @@ export function ViewportCanvas(props: ViewportCanvasProps) {
     }>({});
 
     useEffect(() => {
-        window.addEventListener('resize', onWindowResized);
+        window.addEventListener('resize', assignSizes);
+
+        assignSizes();
 
         return () => {
-            window.removeEventListener('resize', onWindowResized);
+            window.removeEventListener('resize', assignSizes);
         }
     }, []);
 
-    function onWindowResized() {
+    function assignSizes() {
         const scale = (autoScaleRatio && window.devicePixelRatio) || 1;
         stateRef.current.width = window.innerWidth;
         stateRef.current.height = window.innerHeight;
         stateRef.current.renderWidth = stateRef.current.width * scale;
         stateRef.current.renderHeight = stateRef.current.height * scale;
-        rerender();
+        rerender(Math.random());
     }
 
     const style: CSSProperties = {
