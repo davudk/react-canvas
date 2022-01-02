@@ -1,4 +1,4 @@
-import React, { CSSProperties, useEffect, useState } from 'react';
+import React, { CSSProperties, useEffect, useRef, useState } from 'react';
 import { Canvas } from './canvas';
 import { CanvasRenderer } from './renderer';
 
@@ -13,6 +13,13 @@ export function ViewportCanvas(props: ViewportCanvasProps) {
     const [_, rerender] = useState<void>();
     const { className, renderer, autoScaleRatio } = props;
 
+    const stateRef = useRef<{
+        width?: number;
+        height?: number;
+        renderWidth?: number;
+        renderHeight?: number;
+    }>({});
+
     useEffect(() => {
         window.addEventListener('resize', onWindowResized);
 
@@ -22,6 +29,11 @@ export function ViewportCanvas(props: ViewportCanvasProps) {
     }, []);
 
     function onWindowResized() {
+        const scale = (autoScaleRatio && window.devicePixelRatio) || 1;
+        stateRef.current.width = window.innerWidth;
+        stateRef.current.height = window.innerHeight;
+        stateRef.current.renderWidth = stateRef.current.width * scale;
+        stateRef.current.renderHeight = stateRef.current.height * scale;
         rerender();
     }
 
@@ -34,18 +46,13 @@ export function ViewportCanvas(props: ViewportCanvasProps) {
         pointerEvents: 'none'
     };
 
-    const { innerWidth, innerHeight, devicePixelRatio } = globalThis.window || {};
-    const width = innerWidth ?? 300;
-    const height = innerHeight ?? 150;
-    const scale = (autoScaleRatio && devicePixelRatio) || 1;
-
     return (
         <Canvas className={className}
             renderer={renderer}
-            width={width}
-            height={height}
-            renderWidth={width}
-            renderHeight={height * scale}
+            width={stateRef.current.width}
+            height={stateRef.current.height}
+            renderWidth={stateRef.current.renderWidth}
+            renderHeight={stateRef.current.renderHeight}
             style={style}
         />
     );
